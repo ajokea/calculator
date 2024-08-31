@@ -57,6 +57,10 @@ const display = document.querySelector('.display');
 
 let newNumber = true;
 
+let decimal = false;
+
+let negative = false;
+
 function populateDisplay(num) {
     if (newNumber) {
         display.innerText = num;
@@ -78,6 +82,8 @@ allClearButton.addEventListener('click', () => {
     operator = null;
     num1 = null;
     num2 = null;
+    negative = false;
+    decimal = false;
     newNumber = true;
     
     populateDisplay('0');
@@ -96,6 +102,7 @@ equalsButton.addEventListener('click', () => {
     num1 = null;
     num2 = null;
     operator = null;
+    decimal = false;
 })
 
 const operatorButtons = document.querySelectorAll('.ops');
@@ -111,10 +118,35 @@ operatorButtons.forEach((btn) => {
             populateDisplay(result);
             console.log('result: ', operator, num1, num2, result);
             newNumber = true;
+            decimal = false;
 
             num1 = result; 
             num2 = null;
         }
         operator = btn.innerText;
     })
+});
+
+const decimalButton = document.querySelector('#dec');
+decimalButton.addEventListener('click', () => {
+    if (!decimal) {
+        if (newNumber) {
+            populateDisplay('0');
+        }
+        populateDisplay('.');
+        decimal = true;
+    }
+});
+
+const signButton = document.querySelector('#sign');
+signButton.addEventListener('click', () => {
+    if (display.innerText != '0') {
+        negative = !negative;
+        newNumber = true;
+        if (negative) {
+            populateDisplay('-' + display.innerText);
+        } else {
+            populateDisplay(display.innerText.slice(1));
+        }
+    }
 });
