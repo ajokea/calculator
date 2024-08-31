@@ -1,17 +1,36 @@
 function add(a, b) {
-    return a + b;
+    let sum = a + b;
+    if (sum > 999999999) {
+        return sum.toPrecision(3);
+    }
+    return sum;
 }
 
 function subtract(a, b) {
-    return a - b;
+    let diff = a - b;
+    if (diff > 999999999) {
+        return diff.toPrecision(3);
+    }
+    return diff;
 }
 
 function multiply(a, b) {
-    return a * b;
+    let prod = a * b;
+    if (prod > 999999999) {
+        return prod.toPrecision(3);
+    }
+    return prod;
 }
 
 function divide(a, b) {
-    return a / b;
+    if (b == 0) {
+        return "no chance!"
+    } 
+    let quotient = a / b;
+    if (quotient > 999999999) {
+        return quotient.toPrecision(3);
+    }
+    return quotient;
 }
 
 let operator;
@@ -26,10 +45,76 @@ function operate(op, a, b) {
         case '-':
             return subtract(a, b);
         
-        case '*':
+        case 'x':
             return multiply(a, b);
         
         case '/':
             return divide(a, b);
     }
 }
+
+const display = document.querySelector('.display');
+
+let newNumber = true;
+
+function populateDisplay(num) {
+    if (newNumber) {
+        display.innerText = num;
+        newNumber = false;
+    } else if (display.innerText.length < 9 ) {
+        display.innerText += num;
+    } else {
+        display.innerText = (+(display.innerText + num)).toPrecision(3);
+    }
+}
+
+const numberButtons = document.querySelectorAll('.nums');
+numberButtons.forEach((btn) => {
+    btn.addEventListener('click', () => populateDisplay(btn.innerText));
+});
+
+const allClearButton = document.querySelector('#clear');
+allClearButton.addEventListener('click', () => {
+    operator = null;
+    num1 = null;
+    num2 = null;
+    newNumber = true;
+    
+    populateDisplay('0');
+    newNumber = true;
+});
+
+const equalsButton = document.querySelector('#equals');
+equalsButton.addEventListener('click', () => {
+    newNumber = true;
+    if (operator && num1) {
+        num2 = +(display.innerText);
+        let result = operate(operator, num1, num2);
+        populateDisplay(result);
+        newNumber = true;
+    }
+    num1 = null;
+    num2 = null;
+    operator = null;
+})
+
+const operatorButtons = document.querySelectorAll('.ops');
+operatorButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+        newNumber = true;
+        if (!num1) {
+            num1 = +(display.innerText);
+        } else {
+            num2 = +(display.innerText);
+
+            let result = operate(operator, num1, num2);
+            populateDisplay(result);
+            console.log('result: ', operator, num1, num2, result);
+            newNumber = true;
+
+            num1 = result; 
+            num2 = null;
+        }
+        operator = btn.innerText;
+    })
+});
