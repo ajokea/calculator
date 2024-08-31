@@ -63,8 +63,10 @@ let negative = false;
 
 function populateDisplay(num) {
     if (newNumber) {
-        display.innerText = num;
-        newNumber = false;
+        if (!(display.innerText == '0' && num == '0')) {
+            display.innerText = num;
+            newNumber = false;
+        }
     } else if (display.innerText.length < 9 ) {
         display.innerText += num;
     } else {
@@ -77,8 +79,7 @@ numberButtons.forEach((btn) => {
     btn.addEventListener('click', () => populateDisplay(btn.innerText));
 });
 
-const allClearButton = document.querySelector('#clear');
-allClearButton.addEventListener('click', () => {
+function clearAll() {
     operator = null;
     num1 = null;
     num2 = null;
@@ -88,10 +89,12 @@ allClearButton.addEventListener('click', () => {
     
     populateDisplay('0');
     newNumber = true;
-});
+}
 
-const equalsButton = document.querySelector('#equals');
-equalsButton.addEventListener('click', () => {
+const allClearButton = document.querySelector('#clear');
+allClearButton.addEventListener('click', clearAll);
+
+function equals() {
     newNumber = true;
     if (operator && num1) {
         num2 = +(display.innerText);
@@ -103,12 +106,13 @@ equalsButton.addEventListener('click', () => {
     num2 = null;
     operator = null;
     decimal = false;
-})
+};
 
-const operatorButtons = document.querySelectorAll('.ops');
-operatorButtons.forEach((btn) => {
-    btn.addEventListener('click', () => {
-        newNumber = true;
+const equalsButton = document.querySelector('#equals');
+equalsButton.addEventListener('click', equals);
+
+function applyOperation(button) {
+    newNumber = true;
         if (!num1) {
             num1 = +(display.innerText);
         } else {
@@ -116,19 +120,23 @@ operatorButtons.forEach((btn) => {
 
             let result = operate(operator, num1, num2);
             populateDisplay(result);
-            console.log('result: ', operator, num1, num2, result);
             newNumber = true;
             decimal = false;
 
             num1 = result; 
             num2 = null;
         }
-        operator = btn.innerText;
-    })
+        operator = button.innerText;
+}
+
+const operatorButtons = document.querySelectorAll('.ops');
+operatorButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+        applyOperation(btn);
+    });
 });
 
-const decimalButton = document.querySelector('#dec');
-decimalButton.addEventListener('click', () => {
+function addDecimal() {
     if (!decimal) {
         if (newNumber) {
             populateDisplay('0');
@@ -136,7 +144,10 @@ decimalButton.addEventListener('click', () => {
         populateDisplay('.');
         decimal = true;
     }
-});
+};
+
+const decimalButton = document.querySelector('#dec');
+decimalButton.addEventListener('click', addDecimal);
 
 const signButton = document.querySelector('#sign');
 signButton.addEventListener('click', () => {
@@ -151,8 +162,7 @@ signButton.addEventListener('click', () => {
     }
 });
 
-const backspaceButton = document.querySelector('#del');
-backspaceButton.addEventListener('click', () => {
+function backspace() {
     if (display.innerText != '0') {
         if (display.innerText.length == 1) {
             newNumber = true;
@@ -161,7 +171,50 @@ backspaceButton.addEventListener('click', () => {
         } else {
             newNumber = true;
             populateDisplay(display.innerText.slice(0,-1));
-            newNumber = true;
         }
+    }
+};
+
+const backspaceButton = document.querySelector('#del');
+backspaceButton.addEventListener('click', backspace);
+
+document.addEventListener('keydown', event => {
+    switch (event.key) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+            populateDisplay(event.key);
+            break;
+        case 'Enter':
+            equals();
+            break;
+        case 'Backspace':
+            backspace();
+            break;
+        case 'Decimal':
+            addDecimal();
+            break;
+        case 'Multiply':
+            applyOperation('x')
+            break;
+        case 'Add':
+            applyOperation('+')
+            break;
+        case 'Subtract':
+            applyOperation('-')
+            break;
+        case 'Divide':
+            applyOperation('/')
+            break;
+        case 'Clear':
+            clearAll();
+            break;
     }
 });
