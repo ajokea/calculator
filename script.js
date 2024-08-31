@@ -150,3 +150,18 @@ signButton.addEventListener('click', () => {
         }
     }
 });
+
+const backspaceButton = document.querySelector('#del');
+backspaceButton.addEventListener('click', () => {
+    if (display.innerText != '0') {
+        if (display.innerText.length == 1) {
+            newNumber = true;
+            populateDisplay('0');
+            newNumber = true;
+        } else {
+            newNumber = true;
+            populateDisplay(display.innerText.slice(0,-1));
+            newNumber = true;
+        }
+    }
+});

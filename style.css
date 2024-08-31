@@ -46,10 +46,6 @@ button {
     background-color: pink;
 }
 
-#clear, #sign {
-    flex-basis: 154px;
-}
-
 #zero {
     flex-basis: 208px;
 }
