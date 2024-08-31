@@ -1,6 +1,6 @@
 function add(a, b) {
     let sum = a + b;
-    if (sum > 999999999) {
+    if (`${sum}`.length > 9) {
         return sum.toPrecision(3);
     }
     return sum;
@@ -8,7 +8,7 @@ function add(a, b) {
 
 function subtract(a, b) {
     let diff = a - b;
-    if (diff > 999999999) {
+    if (`${diff}`.length > 9) {
         return diff.toPrecision(3);
     }
     return diff;
@@ -16,7 +16,7 @@ function subtract(a, b) {
 
 function multiply(a, b) {
     let prod = a * b;
-    if (prod > 999999999) {
+    if (`${prod}`.length > 9) {
         return prod.toPrecision(3);
     }
     return prod;
@@ -27,7 +27,7 @@ function divide(a, b) {
         return "no chance!"
     } 
     let quotient = a / b;
-    if (quotient > 999999999) {
+    if (`${quotient}`.length > 9) {
         return quotient.toPrecision(3);
     }
     return quotient;
